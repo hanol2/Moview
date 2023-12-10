@@ -1,4 +1,3 @@
-import { styled } from 'styled-components';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { auth } from '../firebase';
@@ -48,7 +47,7 @@ export default function CreateAccount() {
 
     return (
         <Wrapper>
-            <Title>Log into 🎞</Title>
+            <Title>Log into MoView</Title>
             <Form onSubmit={onSubmit}>
         
                 <Input

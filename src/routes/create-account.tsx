@@ -1,4 +1,3 @@
-import { styled } from 'styled-components';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
@@ -59,7 +58,7 @@ export default function CreateAccount() {
 
     return (
         <Wrapper>
-            <Title>Join 🎞</Title>
+            <Title>Join Moview</Title>
             <Form onSubmit={onSubmit}>
                 <Input
                     onChange={onChange}
