@@ -1,30 +1,47 @@
 import {Link,Outlet, useNavigate} from "react-router-dom";
 import {styled} from "styled-components";
 import { auth } from "../firebase";
+import SideMenu from "./side-menu";
+import { useState } from "react";
+import PostTweetForm from "./post-tweet-form";
+
+
+const Modal = styled.div`
+    height: 100%;
+    width: 100%;
+    display: flex;
+    position: fixed;
+    z-index: 0;
+    justify-content: center;
+    align-items: center;
+`
 
 const Wrapper = styled.div`
+position: relative;
 display : grid;
 gap : 20px;
-grid-template-columns:1fr 4fr;
-padding : 50px 0;
+grid-template-columns: 1fr 3fr 1fr;
 height : 100%;
 width : 100%;
-max-width : 860px;
+max-width : 1200px;
 `
 
 const Menu = styled.div`
-display : flex;
 flex-direction : column;
-align-items : center;
-gap : 20px;
+padding: 50px 0;
+`
+
+const TitleLogo = styled.img`
+width:150px;
+height:50px;
 `
 
 const MenuItem = styled.div`
+
 cursor : pointer;
 display : flex;
 align-items : center;
 justify-content : center;
-border : 2px solid white;
 height : 50px;
 width : 50px;
 border-radius : 50%;
@@ -40,8 +57,25 @@ border-radius : 50%;
     }
 `
 
-export default function Layout(){
+const PostTweet = styled.button`
+position: fixed;
+bottom : 50px;
+width: 200px;
+height:40px;
+  background-color:  #8062D6;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  font-size: 16px;
+  cursor: pointer;
+  &:hover,
+  &:active {
+    opacity: 0.9;
+  }
+`;
 
+export default function Layout(){
+    const [modal, setModal] = useState(false);
     const navigate = useNavigate();
 
     const onLogOut = async()=>{
@@ -52,14 +86,18 @@ export default function Layout(){
         }
     }
     return (
-        <Wrapper>
+        <Modal>
+        <Wrapper >
 <Menu>
+     <Link to="/">
+            <TitleLogo src="/moView.png"/>
+     </Link>
 
     <Link to="/">
     <MenuItem>
     <svg fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
   <path clipRule="evenodd" fillRule="evenodd" d="M9.293 2.293a1 1 0 011.414 0l7 7A1 1 0 0117 11h-1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-3a1 1 0 00-1-1H9a1 1 0 00-1 1v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-6H3a1 1 0 01-.707-1.707l7-7z" />
-</svg>
+</svg> 
     </MenuItem>
     </Link>
 
@@ -79,10 +117,15 @@ export default function Layout(){
   <path clipRule="evenodd" fillRule="evenodd" d="M19 10a.75.75 0 00-.75-.75H8.704l1.048-.943a.75.75 0 10-1.004-1.114l-2.5 2.25a.75.75 0 000 1.114l2.5 2.25a.75.75 0 101.004-1.114l-1.048-.943h9.546A.75.75 0 0019 10z" />
 </svg>
     </MenuItem>
-</Menu>
 
+    <PostTweet onClick={()=>setModal(!modal)}>post
+    </PostTweet>
+</Menu>
             <Outlet/>
+            <SideMenu/>
         </Wrapper>
-        
+            {modal && <PostTweetForm></PostTweetForm>}
+            </Modal>
+
     )
 }

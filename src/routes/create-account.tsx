@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { auth } from '../firebase';
 import { FirebaseError } from 'firebase/app';
-import { Form, Error, Input, Switcher, Title, Wrapper } from '../components/auth-component';
+import { Form, Error, Input, Switcher, Title, Wrapper, TitleLogo } from '../components/auth-component';
 import GithubButton from '../components/github-btn';
 
 export default function CreateAccount() {
@@ -58,7 +58,7 @@ export default function CreateAccount() {
 
     return (
         <Wrapper>
-            <Title>Join Moview</Title>
+            <Title>Join</Title><TitleLogo src="/moView.png"/>
             <Form onSubmit={onSubmit}>
                 <Input
                     onChange={onChange}

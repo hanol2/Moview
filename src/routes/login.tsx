@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { auth } from '../firebase';
 import { FirebaseError } from 'firebase/app';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { Form,Error, Input, Switcher, Title, Wrapper } from '../components/auth-component';
+import { Form,Error, Input, Switcher, Title, Wrapper, TitleLogo } from '../components/auth-component';
 import GithubButton from '../components/github-btn';
 
 export default function CreateAccount() {
@@ -47,7 +47,7 @@ export default function CreateAccount() {
 
     return (
         <Wrapper>
-            <Title>Log into MoView</Title>
+            <Title>Log into</Title><TitleLogo src="/moView.png"/>
             <Form onSubmit={onSubmit}>
         
                 <Input

@@ -1,19 +1,46 @@
 import { styled } from "styled-components";
-import PostTweetForm from "../components/post-tweet-form";
 import Timeline from "../components/timeline";
+import PostTweetForm from "../components/post-tweet-form";
 
 const Wrapper = styled.div`
   display: grid;
-  gap: 50px;
   overflow-y: scroll;
-  grid-template-rows: 1fr 5fr;
+  position: relative;
 `;
 
-export default function Home() {
+const TimelineNav = styled.div`
+position: absolute;
+display: flex;
+justify-content: space-around;
+  width: 100%;
+  height : 50px;
+ background: black;
+ opacity: 70%;
+`
+
+
+const ForyouButton = styled.div`
+display: flex;
+align-items: center;
+  
+`
+const FollowingButton = styled.div`
+  display: flex;
+align-items: center;
+`
+
+export default function Home({modal}) {
   return (
     <Wrapper>
-      <PostTweetForm />
-      <Timeline />
+    <TimelineNav>
+    <ForyouButton>For you</ForyouButton>
+    <FollowingButton>Following</FollowingButton>
+    </TimelineNav>
+    
+      {modal && <PostTweetForm/>}
+    <Timeline>
+
+    </Timeline>
     </Wrapper>
   );
 }

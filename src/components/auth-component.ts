@@ -6,12 +6,20 @@ export const Wrapper = styled.div`
     flex-direction : column;
     align-items : center;
     width: 420px;
-    padding : 50px 0;
+    padding : 100px 0;
 `;
 
 export const Title = styled.h1`
     font-size : 42px;
+    margin-bottom: 5px;
 `;
+
+
+export const TitleLogo = styled.img`
+width:150px;
+height:50px;
+` 
+
 
 export const Form = styled.form`
     margin-top : 50px;

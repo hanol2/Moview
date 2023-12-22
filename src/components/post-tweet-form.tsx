@@ -5,14 +5,28 @@ import { auth, db, storage } from "../firebase";
 import { addDoc, collection, updateDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
+const CloseButton = styled.div`
+cursor : pointer;
+svg{
+  position: fixed;
+  color: white;
+  width: 20px;
+  height: 20px;
+  z-index: 1;
+} 
+`
+
 const Form = styled.form`
+position: absolute;
 display: flex;
 flex-direction: column;
-gap : 10px;
-  
+background-color: #333333;
+width: 602px;
+border-radius: 10px;
 `;
 
 const TextArea = styled.textarea`
+margin-top : 40px;
 border: 2px solid white;
 border-radius: 20px;
 background-color: black;
@@ -32,6 +46,7 @@ resize : none;
 `;
 
 const AttachFileButton = styled.label`
+margin-top : 20px;
   padding: 10px 0px;
   color:  #8062D6;
   text-align: center;
@@ -47,6 +62,7 @@ const AttachFileInput = styled.input`
 `;
 
 const SubmitBtn = styled.input`
+margin-bottom: 20px;
   background-color:  #8062D6;
   color: white;
   border: none;
@@ -61,35 +77,35 @@ const SubmitBtn = styled.input`
 `;
 
 
-export default function PostTweetForm(){
-    const [loading, setLoading] = useState(false);
-    const [ tweet, setTweet] = useState("");
-    const [file, setFile] = useState<File | null>(null);
-    const onChange = (e:React.ChangeEvent<HTMLTextAreaElement>) => {
-        setTweet(e.target.value);
+export default function PostTweetForm () {
+  const [isLoading, setLoading] = useState(false);
+  const [tweet, setTweet] = useState("");
+  const [file, setFile] = useState<File | null>(null);
+  const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setTweet(e.target.value);
+  };
+  const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { files } = e.target;
+    if (files && files.length === 1) {
+      setFile(files[0]);
     }
-    const onFileChange = (e: React.ChangeEvent<HTMLInputElement>)=>{
-        const {files} = e?.target;
-        if ( files && files.length === 1){
-            setFile(files[0]);
-        }
-    }
-    const onSubmit = async(e:React.FormEvent<HTMLFormElement>)=>{
-        e.preventDefault();
-        const user = auth.currentUser;
-        if (!user || loading || tweet == "" || tweet.length > 100) return;
-        try {
-            setLoading(true);
-            const doc = await addDoc(collection(db, "tweets"), {
-                tweet,
-                createAt :Date.now(),
-                username : user.displayName || "Anonymous", 
-                userId : user.uid,
-            });
-                if (file) {
+  };
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const user = auth.currentUser;
+    if (!user || isLoading || tweet === "" || tweet.length > 180) return;
+    try {
+      setLoading(true);
+      const doc = await addDoc(collection(db, "tweets"), {
+        tweet,
+        createdAt: Date.now(),
+        username: user.displayName || "Anonymous",
+        userId: user.uid,
+      });
+      if (file) {
         const locationRef = ref(
           storage,
-          `tweets/${user.uid}-${user.displayName}/${doc.id}`
+          `tweets/${user.uid}/${doc.id}`
         );
         const result = await uploadBytes(locationRef, file);
         const url = await getDownloadURL(result.ref);
@@ -97,17 +113,20 @@ export default function PostTweetForm(){
           photo: url,
         });
       }
-      setTweet("")
-      setFile(null)
-        } catch (e) {
-            console.log(e);
-        } finally {
-            setLoading(false);
-        }
-
+      setTweet("");
+      setFile(null);
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setLoading(false);
     }
+  };
     return (
+
         <Form onSubmit={onSubmit}>
+            <CloseButton ><svg fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+   <path clipRule="evenodd" fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" />
+ </svg></CloseButton>
             <TextArea 
             required
             rows={5}
@@ -120,7 +139,7 @@ export default function PostTweetForm(){
             onChange={onFileChange}
             type="file"
             id="file" accept="image/*"/>
-            <SubmitBtn type="submit" value={loading ? "Posting..." : "Post Tweet"}/>
+            <SubmitBtn type="submit" value={isLoading ? "Posting..." : "Post Tweet"}/>
         </Form>
     )
 }
